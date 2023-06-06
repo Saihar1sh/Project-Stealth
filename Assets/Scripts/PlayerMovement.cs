@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Gameplay.Inputs;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -15,9 +16,6 @@ public class PlayerMovement : MonoBehaviour
 
     Rigidbody rb;
     //Animator anim;
-    //float vertical;
-    //float horizontal;
-    Vector3 inputVector;
     Vector3 moveDirection;
     float inputAmount;
     Vector3 raycastFloorPos;
@@ -26,10 +24,16 @@ public class PlayerMovement : MonoBehaviour
     Vector3 CombinedRaycast;
 
 
+    //caching as it would be required
+    Gameplay.Inputs.PlayerInputManager playerInputManager;
+
+
 
     private void Awake()
     {
-        global::PlayerInputs.Instance.MovementAction += (inputVector) => { PlayerInputs(inputVector); };
+        playerInputManager = Gameplay.Inputs.PlayerInputManager.Instance;
+
+        playerInputManager.SubscribeToMovementInputs((inputVector) => { InputHandling(inputVector); });
     }
     // Use this for initialization
     void Start()
@@ -38,29 +42,30 @@ public class PlayerMovement : MonoBehaviour
         //anim = GetComponent<Animator>();
     }
 
+    private void Update()
+    {
+        Debug.Log("input: " + Input.GetAxis("Horizontal" + " " + Input.GetAxis("Vertical")));
 
-    private void PlayerInputs(Vector3 inputVector)
+    }
+    private void InputHandling(Vector3 inputVector)
     {
         // reset movement
-        moveDirection = Vector3.zero;
-        // get vertical and horizontal movement input (controller and WASD/ Arrow Keys)
-        //vertical = Input.GetAxis("Vertical");
-        //horizontal = Input.GetAxis("Horizontal");
+        //moveDirection = Vector3.zero;
+
 
         // base movement on camera
-        Vector3 correctedVertical = inputVector.y * Camera.main.transform.forward;
-        Vector3 correctedHorizontal = inputVector.x * Camera.main.transform.right;
+        Vector3 combinedInput = (inputVector.x * Camera.main.transform.right) + (inputVector.y * Camera.main.transform.forward);
 
-        Vector3 combinedInput = correctedHorizontal + correctedVertical;
         // normalize so diagonal movement isnt twice as fast, clear the Y so your character doesnt try to
         // walk into the floor/ sky when your camera isn't level
-        moveDirection = new Vector3((combinedInput).normalized.x, 0, (combinedInput).normalized.z);
+
+        moveDirection = new Vector3(combinedInput.x, 0, combinedInput.z).normalized;
 
         // make sure the input doesnt go negative or above 1;
         float inputMagnitude = Mathf.Abs(inputVector.x) + Mathf.Abs(inputVector.y);
         inputAmount = Mathf.Clamp01(inputMagnitude);
 
-        // rotate player to movement direction
+        // rotate player to movement direction when there is a valid direction
         if(moveDirection  != Vector3.zero)
         {
             Quaternion rot = Quaternion.LookRotation(moveDirection);
@@ -78,7 +83,7 @@ public class PlayerMovement : MonoBehaviour
         // if not grounded , increase down force
         if (FloorRaycasts(0, 0, 0.6f) == Vector3.zero)
         {
-            gravity += Vector3.up * Physics.gravity.y * Time.fixedDeltaTime;
+            gravity += Physics.gravity.y * Vector3.up * Time.fixedDeltaTime;
         }
 
         // actual movement of the rigidbody + extra down force
@@ -119,21 +124,22 @@ public class PlayerMovement : MonoBehaviour
             CombinedRaycast += FloorRaycasts(offsetx, offsetz, 1.6f);
             return 1;
         }
-        else { return 0; }
+        else
+            return 0;
     }
 
 
     Vector3 FloorRaycasts(float offsetx, float offsetz, float raycastLength)
     {
-        RaycastHit hit;
         // move raycast
         raycastFloorPos = transform.TransformPoint(0 + offsetx, 0 + 0.5f, 0 + offsetz);
 
         Debug.DrawRay(raycastFloorPos, Vector3.down, Color.magenta);
-        if (Physics.Raycast(raycastFloorPos, -Vector3.up, out hit, raycastLength))
+        if (Physics.Raycast(raycastFloorPos, -Vector3.up, out RaycastHit hit, raycastLength))
         {
             return hit.point;
         }
-        else return Vector3.zero;
+        else 
+            return Vector3.zero;
     }
 }
