@@ -9,14 +9,13 @@ using Gameplay.Inputs;
 public class PlayerMovement : MonoBehaviour
 {
     public float floorOffsetY;
-    public float moveSpeed = 6f;
-    public float rotateSpeed = 10f;
+    public float moveSpeed = 6f,rotateSpeed = 10f;
 
     public int animationFloatname;
 
     Rigidbody rb;
     //Animator anim;
-    Vector3 moveDirection;
+    Vector3 moveDirection, inputVector;
     float inputAmount;
     Vector3 raycastFloorPos;
     Vector3 floorMovement;
@@ -42,40 +41,48 @@ public class PlayerMovement : MonoBehaviour
         //anim = GetComponent<Animator>();
     }
 
-    private void Update()
+/*    private void Update()
     {
-        Debug.Log("input: " + Input.GetAxis("Horizontal" + " " + Input.GetAxis("Vertical")));
+        //Debug.Log("input: " + Input.GetAxis("Horizontal" + " " + Input.GetAxis("Vertical")));
 
     }
-    private void InputHandling(Vector3 inputVector)
+*/    void TurnThePlayer()
     {
-        // reset movement
-        //moveDirection = Vector3.zero;
-
-
         // base movement on camera
-        Vector3 combinedInput = (inputVector.x * Camera.main.transform.right) + (inputVector.y * Camera.main.transform.forward);
-
-        // normalize so diagonal movement isnt twice as fast, clear the Y so your character doesnt try to
-        // walk into the floor/ sky when your camera isn't level
+        Vector3 combinedInput = CameraDirection(inputVector);
 
         moveDirection = new Vector3(combinedInput.x, 0, combinedInput.z).normalized;
 
-        // make sure the input doesnt go negative or above 1;
-        float inputMagnitude = Mathf.Abs(inputVector.x) + Mathf.Abs(inputVector.y);
-        inputAmount = Mathf.Clamp01(inputMagnitude);
-
-        // rotate player to movement direction when there is a valid direction
-        if(moveDirection  != Vector3.zero)
+        if (moveDirection.sqrMagnitude > 0.01f)
         {
             Quaternion rot = Quaternion.LookRotation(moveDirection);
             Quaternion targetRotation = Quaternion.Slerp(transform.rotation, rot, Time.fixedDeltaTime * inputAmount * rotateSpeed);
             transform.rotation = targetRotation;
 
         }
+    }
+
+    private void InputHandling(Vector3 _inputVector)
+    {
+        // reset movement
+        //moveDirection = Vector3.zero;
+
+        inputVector = _inputVector;
+
+        // make sure the input doesnt go negative or above 1;
+        float inputMagnitude = Mathf.Abs(_inputVector.x) + Mathf.Abs(_inputVector.y);
+        inputAmount = Mathf.Clamp01(inputMagnitude);
+
 
         // handle animation blendtree for walking
         //anim.SetFloat(animationFloatname, inputAmount, 0.2f, Time.deltaTime);
+    }
+
+    private Vector3 CameraDirection(Vector3 inputVector)
+    {
+        Vector3 cameraDir = (inputVector.x * Camera.main.transform.right) + (inputVector.y * Camera.main.transform.forward);
+        cameraDir.y = 0f;
+        return cameraDir;
     }
 
     private void FixedUpdate()
@@ -83,11 +90,14 @@ public class PlayerMovement : MonoBehaviour
         // if not grounded , increase down force
         if (FloorRaycasts(0, 0, 0.6f) == Vector3.zero)
         {
-            gravity += Physics.gravity.y * Vector3.up * Time.fixedDeltaTime;
+            gravity += Physics.gravity.y * Time.fixedDeltaTime * Vector3.up;
         }
 
         // actual movement of the rigidbody + extra down force
-        rb.velocity = (moveDirection * moveSpeed * inputAmount) + gravity;
+        rb.velocity = (inputAmount * moveSpeed * moveDirection) + gravity;
+
+        // rotate player to movement direction when there is a valid direction
+        TurnThePlayer();
 
         // find the Y position via raycasts
         floorMovement = new Vector3(rb.position.x, FindFloor().y + floorOffsetY, rb.position.z);
@@ -99,6 +109,7 @@ public class PlayerMovement : MonoBehaviour
             rb.MovePosition(floorMovement);
             gravity.y = 0;
         }
+
 
     }
 
