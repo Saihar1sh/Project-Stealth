@@ -48,7 +48,7 @@ public class PlayerMovement : MonoBehaviour
     private void Update()
     {
         normalizedVelocity = rb.velocity.normalized;
-        //playerAnimationManager.PlayerVelocityHandler(normalizedVelocity);
+        playerAnimationManager.PlayerVelocityHandler(normalizedVelocity);
     }
     void TurnThePlayer()
     {
@@ -70,7 +70,7 @@ public class PlayerMovement : MonoBehaviour
     {
         // reset movement
         //moveDirection = Vector3.zero;
-        playerAnimationManager.PlayerVelocityHandler(_inputVector);
+        //playerAnimationManager.PlayerVelocityHandler(_inputVector);
         inputVector = _inputVector;
 
         // make sure the input doesnt go negative or above 1;
