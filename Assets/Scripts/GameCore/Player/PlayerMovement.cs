@@ -1,20 +1,14 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.Mathematics;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using Gameplay.Inputs;
 
 public class PlayerMovement : MonoBehaviour
 {
     public float floorOffsetY;
-    public float moveSpeed = 6f,rotateSpeed = 10f;
+    public float moveSpeed = 6f, rotateSpeed = 10f;
 
     public int animationFloatname;
 
     Rigidbody rb;
-    //Animator anim;
+    Animator anim;
     Vector3 moveDirection, inputVector;
     float inputAmount;
     Vector3 raycastFloorPos;
@@ -42,7 +36,7 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        //anim = GetComponent<Animator>();
+        anim = GetComponent<Animator>();
     }
 
     private void Update()
@@ -87,38 +81,38 @@ public class PlayerMovement : MonoBehaviour
         return cameraDir;
     }
 
-    private void FixedUpdate()
-    {
-        // if not grounded , increase down force
-        if (FloorRaycasts(0, 0, 0.6f) == Vector3.zero)
+    /*    private void FixedUpdate()
         {
-            gravity += Physics.gravity.y * Time.fixedDeltaTime * Vector3.up;
+            // if not grounded , increase down force
+            if (FloorRaycasts(0, 0, 0.6f) == Vector3.zero)
+            {
+                gravity += Physics.gravity.y * Time.fixedDeltaTime * Vector3.up;
+            }
+
+            moveDirection.Set(inputVector.x, 0, inputVector.y);
+
+            // actual movement of the rigidbody + extra down force
+            rb.velocity = (inputAmount * moveSpeed * moveDirection) + gravity;
+
+
+
+            // rotate player to movement direction when there is a valid direction
+            //TurnThePlayer();
+
+            // find the Y position via raycasts
+            floorMovement = new Vector3(rb.position.x, FindFloor().y + floorOffsetY, rb.position.z);
+
+            // only stick to floor when grounded
+            if (FloorRaycasts(0, 0, 0.6f) != Vector3.zero && floorMovement != rb.position)
+            {
+                // move the rigidbody to the floor
+                rb.MovePosition(floorMovement);
+                gravity.y = 0;
+            }
+
+
         }
-
-        moveDirection.Set(inputVector.x, 0, inputVector.y);
-
-        // actual movement of the rigidbody + extra down force
-        rb.velocity = (inputAmount * moveSpeed * moveDirection) + gravity;
-
-
-
-        // rotate player to movement direction when there is a valid direction
-        //TurnThePlayer();
-
-        // find the Y position via raycasts
-        floorMovement = new Vector3(rb.position.x, FindFloor().y + floorOffsetY, rb.position.z);
-
-        // only stick to floor when grounded
-        if (FloorRaycasts(0, 0, 0.6f) != Vector3.zero && floorMovement != rb.position)
-        {
-            // move the rigidbody to the floor
-            rb.MovePosition(floorMovement);
-            gravity.y = 0;
-        }
-
-
-    }
-
+    */
     Vector3 FindFloor()
     {
         // width of raycasts around the centre of your character
@@ -154,9 +148,9 @@ public class PlayerMovement : MonoBehaviour
         Debug.DrawRay(raycastFloorPos, Vector3.down, Color.magenta);
         if (Physics.Raycast(raycastFloorPos, -Vector3.up, out RaycastHit hit, raycastLength))
         {
-            if(hit.collider.gameObject.layer == 6)
+            if (hit.collider.gameObject.layer == 6)
                 return hit.point;
         }
-            return Vector3.zero;
+        return Vector3.zero;
     }
 }
