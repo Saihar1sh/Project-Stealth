@@ -8,9 +8,9 @@ namespace Gameplay.Inputs
 {
     public class PlayerInputManager : MonoGenericLazySingleton<PlayerInputManager>
     {
-        PlayerControls playerControls;
+        private PlayerControls _playerControls;
 
-        private Action<Vector2> MovementAction = default;
+        private Action<Vector2> _movementAction = default;
 
         protected override void Awake()
         {
@@ -21,40 +21,42 @@ namespace Gameplay.Inputs
 
         public void SubscribeToMovementInputs(System.Action<Vector2> mvtActionFunc)
         {
-            MovementAction += mvtActionFunc;
+            _movementAction += mvtActionFunc;
         }
         public void UnSubscribeToMovementInputs(System.Action<Vector2> mvtActionFunc)
         {
-            MovementAction -= mvtActionFunc;
+            _movementAction -= mvtActionFunc;
         }
-
+        
+#region Private Methods
         private void PlayerControlsInit()
         {
-            playerControls = new();
+            _playerControls = new PlayerControls();
 
-            playerControls.Player.Move.started += (ctx) => { ReadMovementAndReturnValue(ctx); };
-            playerControls.Player.Move.performed += (ctx) => { ReadMovementAndReturnValue(ctx); };
-            playerControls.Player.Move.canceled += (ctx) => { ReadMovementAndReturnValue(ctx); };
+            _playerControls.Player.Move.started += ReadMovementAndReturnValue;
+            _playerControls.Player.Move.performed += ReadMovementAndReturnValue;
+            _playerControls.Player.Move.canceled += ReadMovementAndReturnValue;
         }
 
         private void ReadMovementAndReturnValue(InputAction.CallbackContext ctx)
         {
             Vector3 inputVector;
             Debug.Log(inputVector = ctx.ReadValue<Vector2>());
-            MovementAction.Invoke(inputVector);
+            _movementAction.Invoke(inputVector);
         }
 
         private void OnEnable()
         {
-            if (playerControls == null)
+            if (_playerControls == null)
                 PlayerControlsInit();
 
-            playerControls.Enable();
+            _playerControls?.Enable();
         }
         private void OnDisable()
         {
-            playerControls?.Disable();
+            _playerControls?.Disable();
         }
-
+        
+        #endregion
     }
 }
