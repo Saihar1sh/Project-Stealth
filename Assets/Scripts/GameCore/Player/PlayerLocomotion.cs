@@ -38,7 +38,7 @@ namespace Gameplay.Player
 
         private void OnDestroy()
         {
-            PlayerInputManager.Instance?.UnSubscribeToMovementInputs(MovementInputsHandling);
+            //PlayerInputManager.Instance?.UnSubscribeToMovementInputs(MovementInputsHandling);
         }
     }
 }
