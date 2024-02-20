@@ -1,7 +1,9 @@
 # This .gitignore file should be placed at the root of your Unity project directory
 #
-# Get latest from https://github.com/github/gitignore/blob/main/Unity.gitignore
+# Get latest from #https://github.com/github/gitignore/blob/main/Unity.gitignore
+#but compare it with this file manually before directly upgrading it. (there #is some customisation)
 #
+
 /[Ll]ibrary/
 /[Tt]emp/
 /[Oo]bj/
@@ -58,7 +60,7 @@ sysinfo.txt
 # Builds
 *.apk
 *.aab
-*.unitypackage
+#*.unitypackage #THIS IS ADVISED TO BE IGNORED BY UNITY GITHUB BUT SINCE WE DO NOT BUILD AND KEEP UNITYPACKAGES WE CAN COMMENT THIS LINE. THAT WAY UNITY PACKAGES INSIDE ASSETS CAN BE STORED.
 *.app
 
 # Crashlytics generated file
@@ -70,3 +72,4 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+*.vsconfig
