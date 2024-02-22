@@ -6,7 +6,7 @@ public class PlayerMovement : MonoBehaviour
     public float moveSpeed = 6f, rotateSpeed = 10f;
 
     public int animationFloatname;
-
+    public SerializableDictionary<string, string> keys;
     Rigidbody rb;
     Animator anim;
     Vector3 moveDirection, inputVector;
@@ -37,6 +37,13 @@ public class PlayerMovement : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
+        keys = new SerializableDictionary<string, string>()
+        {
+            { "asdasdf", "asdfgsdgfdgfdsgfds" },
+            { "adssa", "asdf gsdgfdgfdsgfds" },
+            { "asdasrewdf", "asdfgsdgfdgfdsgfds" }
+        };
+        keys["adssa"] = "jkf";
     }
 
     private void Update()
