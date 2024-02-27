@@ -12,9 +12,11 @@ namespace Gameplay.Player
         public float turnSpeed = 15f;
         public float aimDuration = .3f;
 
-        [SerializeField]private Rig aimLayer;
-        
+        [SerializeField] private Rig aimLayer;
+
         private Camera _mainCamera;
+
+        [SerializeField] private BaseWeapon currentWeapon;
 
         // Start is called before the first frame update
         void Start()
@@ -29,15 +31,31 @@ namespace Gameplay.Player
                 turnSpeed * Time.fixedDeltaTime);
         }
 
-        private void Update()
+        private void LateUpdate()
         {
-            if (Input.GetMouseButton(1))
+            if (aimLayer)
             {
-                aimLayer.weight += Time.deltaTime / aimDuration;
+                if (Input.GetMouseButton(1))
+                {
+                    aimLayer.weight += Time.deltaTime / aimDuration;
+                }
+                else
+                {
+                    aimLayer.weight -= Time.deltaTime / aimDuration;
+                }
             }
-            else
+
+            if (currentWeapon)
             {
-                aimLayer.weight -= Time.deltaTime / aimDuration;
+                if (Input.GetMouseButtonDown(0))
+                {
+                    currentWeapon.StartFiring();
+                }
+
+                if (Input.GetMouseButtonUp(0))
+                {
+                    currentWeapon.StopFiring();
+                }
             }
         }
     }
