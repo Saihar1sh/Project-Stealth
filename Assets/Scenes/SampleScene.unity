@@ -4478,6 +4478,7 @@ MonoBehaviour:
   muzzleFlashParticles:
   - {fileID: 7537061455199826368}
   raycastOrigin: {fileID: 287439842}
+  raycastDestination: {fileID: 413976827}
 --- !u!4 &1444935934 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -6532396849450683863, guid: b7b3aacf72568e947bc011893678bcf2, type: 3}

@@ -1,11 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class BaseWeapon : MonoBehaviour
 {
-    [SerializeField] private List<ParticleSystem> muzzleFlashParticles;
+    [SerializeField] private ParticleSystem muzzleFlashParticle;
+    [SerializeField] private ParticleSystem hitEffectParticle;
     [SerializeField] private Transform raycastOrigin;
+    [SerializeField] private Transform raycastDestination;
     
     
     private bool isFiring = false;
@@ -16,15 +19,17 @@ public class BaseWeapon : MonoBehaviour
     public void StartFiring()
     {
         isFiring = true;
-        foreach (var particle in muzzleFlashParticles)
-        {
-            particle.Emit(1);
-        }
+        
+        muzzleFlashParticle.Emit(1);
+        
         ray.origin = raycastOrigin.position;
-        ray.direction = raycastOrigin.forward;
+        ray.direction = raycastDestination.position - raycastOrigin.position;
         if (Physics.Raycast(ray,out hitInfo))
         {
-            Debug.DrawLine(ray.origin,hitInfo.point,Color.red,1f);
+            hitEffectParticle.transform.position = hitInfo.point;
+            hitEffectParticle.transform.forward = hitInfo.normal;
+            hitEffectParticle.Emit(1);
+            //Debug.DrawLine(ray.origin,hitInfo.point,Color.red,1f);
         }
     }
     public void StopFiring()
