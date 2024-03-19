@@ -35,14 +35,15 @@ namespace Gameplay.Player
         {
             if (aimLayer)
             {
-                if (Input.GetMouseButton(1))
+                /*if (Input.GetMouseButton(1))
                 {
                     aimLayer.weight += Time.deltaTime / aimDuration;
                 }
                 else
                 {
                     aimLayer.weight -= Time.deltaTime / aimDuration;
-                }
+                }*/
+                aimLayer.weight = 1f;
             }
 
             if (currentWeapon)
@@ -51,7 +52,13 @@ namespace Gameplay.Player
                 {
                     currentWeapon.StartFiring();
                 }
+                
+                if(currentWeapon.isFiring)
+                {
+                    currentWeapon.UpdateFiring(Time.deltaTime);
+                }
 
+                currentWeapon.UpdateBulletsSimilation(Time.deltaTime);
                 if (Input.GetMouseButtonUp(0))
                 {
                     currentWeapon.StopFiring();
