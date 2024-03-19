@@ -16,7 +16,7 @@ public class BaseWeapon : MonoBehaviour
     
     [SerializeField] private ParticleSystem muzzleFlashParticle;
     [SerializeField] private ParticleSystem hitEffectParticle;
-    [FormerlySerializedAs("bulletTracer")] [SerializeField] private TrailRenderer tracerEffect;
+    [SerializeField] private TrailRenderer tracerEffect;
     [SerializeField] private Transform raycastOrigin;
     [SerializeField] private Transform raycastDestination;
     

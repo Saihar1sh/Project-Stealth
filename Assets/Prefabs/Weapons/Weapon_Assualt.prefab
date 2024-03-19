@@ -2036,7 +2036,7 @@ MonoBehaviour:
   raycastDestination: {fileID: 0}
   fireRate: 0.5
   bulletSpeed: 1000
-  bulletDrop: 0
+  bulletDrop: 10
 --- !u!1 &4697187041861758264
 GameObject:
   m_ObjectHideFlags: 0
