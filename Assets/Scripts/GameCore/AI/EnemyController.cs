@@ -9,40 +9,41 @@ public class EnemyController : MonoBehaviour
 {
     [SerializeField] private Transform wayptParent;
 
-    private NavMeshAgent enemyAgent;
-    private List<Transform> waypts;
+    private NavMeshAgent _enemyAgent;
+    private List<Transform> _waypts;
 
-    private AISensor enemyAISensor;
+    private AISensor _enemyAISensor;
 
-    private int destIndex;
+    private int _destIndex;
 
-    private Vector3 destination;
+    private Vector3 _destination;
     
     private Animator _animator;
     
-    private NavMeshAgent EnemyAgent => enemyAgent ??= GetComponent<NavMeshAgent>();
+    private NavMeshAgent EnemyAgent => _enemyAgent ??= GetComponent<NavMeshAgent>();
     
-    private AnimationController enemyAIAnimationController;
+    private AnimationController _enemyAIAnimationController;
 
     private readonly int _inputX = Animator.StringToHash("InputX");
     private readonly int _inputY = Animator.StringToHash("InputY");
     
-    private readonly int _Movement_Walk_Forward = Animator.StringToHash("Movement_Walk_Fwd");
+    private readonly int _movementWalkForward = Animator.StringToHash("Movement_Walk_Fwd");
+    private readonly int _isWalkingBool = Animator.StringToHash("isWalking");
 
     private void Awake()
     {
-        enemyAISensor = GetComponent<AISensor>();
+        _enemyAISensor = GetComponent<AISensor>();
         _animator = GetComponent<Animator>();
-        enemyAIAnimationController = new AnimationController(_animator);
-        waypts = wayptParent.GetComponentsInChildren<Transform>(true).ToList();
-        waypts.Remove(wayptParent);
+        _enemyAIAnimationController = new AnimationController(_animator);
+        _waypts = wayptParent.GetComponentsInChildren<Transform>(true).ToList();
+        _waypts.Remove(wayptParent);
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        destIndex = 0;
-        enemyAgent.SetDestination(GetDestination());
+        _destIndex = 0;
+        EnemyAgent.SetDestination(GetDestination());
     }
 
     // Update is called once per frame
@@ -50,7 +51,7 @@ public class EnemyController : MonoBehaviour
     {
         Vector3 destination = GetDestination();
         Vector3 direction = (destination - transform.position).normalized;
-        enemyAgent.SetDestination(destination);
+        EnemyAgent.SetDestination(destination);
         //UpdateAnimationParams(direction.x, direction.z);
 
     }
@@ -61,18 +62,20 @@ public class EnemyController : MonoBehaviour
     }*/
     private Vector3 GetDestination()
     {
-        if(enemyAISensor.ObjectsInFOV.Count > 0)
+
+    
+        if(_enemyAISensor.ObjectsInFOV.Count > 0)
         {
-            return destination = enemyAISensor.ObjectsInFOV[0].transform.position;
+            return _destination = _enemyAISensor.ObjectsInFOV[0].transform.position;
         }
         
-        if (enemyAgent.hasPath)
+        if (EnemyAgent.hasPath)
         {
-            return destination;
+            return _destination;
         }
 
-        destIndex = (++destIndex) % waypts.Count;
-        return destination = waypts[destIndex].position;
+        _destIndex = (++_destIndex) % _waypts.Count;
+        return _destination = _waypts[_destIndex].position;
     }
 
     private void OnDrawGizmos()
@@ -80,10 +83,10 @@ public class EnemyController : MonoBehaviour
         if (EnemyAgent.hasPath)
         {
             Gizmos.color = Color.green;
-            Gizmos.DrawLine(transform.position, enemyAgent.destination);
+            Gizmos.DrawLine(transform.position, _enemyAgent.destination);
         }
-if(waypts != null && waypts.Count>0)
-        foreach (var waypt in waypts)
+if(_waypts != null && _waypts.Count>0)
+        foreach (var waypt in _waypts)
         {
             Gizmos.color = Color.red;
             Gizmos.DrawSphere(waypt.position, .25f);

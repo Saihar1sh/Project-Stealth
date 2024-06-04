@@ -48,7 +48,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        normalizedVelocity = rb.velocity.normalized;
+        normalizedVelocity = rb.linearVelocity.normalized;
         //playerAnimationManager.PlayerVelocityHandler(normalizedVelocity);
     }
     void TurnThePlayer()

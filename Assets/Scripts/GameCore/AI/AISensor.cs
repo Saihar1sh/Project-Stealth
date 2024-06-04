@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using UnityEngine;
 
 [ExecuteInEditMode]
@@ -12,18 +13,20 @@ public class AISensor : MonoBehaviour
 
     [Range(0, 180f), Tooltip("Field of view Angle")]
     public float angle = 30f;
+
     public float height = 1f;
     public Color meshColor = Color.red;
     public int scanFrequency = 30;
     public LayerMask visibleLayers;
     public LayerMask occlusionLayers;
-    public List<GameObject> ObjectsInFOV 
-    { 
-        get 
+
+    public List<GameObject> ObjectsInFOV
+    {
+        get
         {
             objectsInFOV.RemoveAll(obj => !obj);
-            return objectsInFOV; 
-        } 
+            return objectsInFOV;
+        }
     }
 
     private Collider[] colliders = new Collider[50];
@@ -37,14 +40,14 @@ public class AISensor : MonoBehaviour
     void Start()
     {
         scanTimer = 0;
-        scanInterval =(float) 1 / scanFrequency;
+        scanInterval = (float)1 / scanFrequency;
     }
 
     // Update is called once per frame
     void Update()
     {
         scanTimer -= Time.deltaTime;
-        if(scanTimer < 0 ) 
+        if (scanTimer < 0)
         {
             scanTimer += scanInterval;
             ScanSurroundings();
@@ -53,13 +56,14 @@ public class AISensor : MonoBehaviour
 
     private void ScanSurroundings()
     {
-        count = Physics.OverlapSphereNonAlloc(transform.position, distance, colliders, visibleLayers, QueryTriggerInteraction.Collide);
+        count = Physics.OverlapSphereNonAlloc(transform.position, distance, colliders, visibleLayers,
+            QueryTriggerInteraction.Collide);
 
         objectsInFOV.Clear();
         for (int i = 0; i < count; i++)
         {
             GameObject obj = colliders[i].gameObject;
-            if(IsInSight(obj))
+            if (IsInSight(obj))
             {
                 objectsInFOV.Add(obj);
             }
@@ -87,11 +91,11 @@ public class AISensor : MonoBehaviour
         origin.y += height / 2;
         destination.y = origin.y;
 
-        if(Physics.Linecast(origin, destination,occlusionLayers)) 
+        if (Physics.Linecast(origin, destination, occlusionLayers))
         {
             return false;
         }
-        
+
         return true;
     }
 
@@ -111,8 +115,8 @@ public class AISensor : MonoBehaviour
         Vector3 bottomRight = Quaternion.Euler(0, angle, 0) * Vector3.forward * distance;
 
         Vector3 topCenter = bottomCenter + Vector3.up * height;
-        Vector3 topLeft = bottomLeft + Vector3.up* height;
-        Vector3 topRight = bottomRight + Vector3.up* height;
+        Vector3 topLeft = bottomLeft + Vector3.up * height;
+        Vector3 topRight = bottomRight + Vector3.up * height;
 
         int vertexIndex = 0;
 
@@ -124,7 +128,7 @@ public class AISensor : MonoBehaviour
         vertices[vertexIndex++] = topLeft;
         vertices[vertexIndex++] = topCenter;
         vertices[vertexIndex++] = bottomCenter;
-        
+
         //right side
 
         vertices[vertexIndex++] = bottomCenter;
@@ -136,7 +140,7 @@ public class AISensor : MonoBehaviour
         vertices[vertexIndex++] = bottomCenter;
 
         float currentAngle = -angle;
-        float angleDelta = (angle * 2) / segments; 
+        float angleDelta = (angle * 2) / segments;
 
         for (int i = 0; i < segments; i++)
         {
@@ -168,16 +172,20 @@ public class AISensor : MonoBehaviour
 
             currentAngle += angleDelta;
         }
-        for (int i = 0;i< numVertices;i++)
+
+        for (int i = 0; i < numVertices; i++)
         {
-            triangles[i] = i;
+            if (!triangles.Contains(i))
+                triangles[i] = i;
         }
+
         mesh.vertices = vertices;
         mesh.triangles = triangles;
         mesh.RecalculateNormals();
 
         return mesh;
     }
+
     private void OnValidate()
     {
         mesh = CreatWedgeMesh();
@@ -189,8 +197,8 @@ public class AISensor : MonoBehaviour
         {
             Gizmos.color = meshColor;
             Gizmos.DrawMesh(mesh, transform.position, transform.rotation);
-
         }
+
         Gizmos.DrawWireSphere(transform.position, distance);
         Gizmos.color = Color.red;
         for (int i = 0; i < count; ++i)
