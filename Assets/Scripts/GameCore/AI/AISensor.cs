@@ -36,6 +36,11 @@ public class AISensor : MonoBehaviour
     private float scanInterval;
     private float scanTimer = 0;
 
+    private void Awake()
+    {
+        colliders = new Collider[50];
+    }
+
     // Start is called before the first frame update
     void Start()
     {

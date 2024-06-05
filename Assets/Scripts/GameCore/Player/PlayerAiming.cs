@@ -22,7 +22,7 @@ namespace Gameplay.Player
         void Start()
         {
             _mainCamera = Camera.main;
-            Cursor.lockState = CursorLockMode.Confined;
+            //Cursor.lockState = CursorLockMode.Confined;
         }
 
         private void FixedUpdate()

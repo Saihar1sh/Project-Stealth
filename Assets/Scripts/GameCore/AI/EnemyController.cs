@@ -22,7 +22,7 @@ public class EnemyController : MonoBehaviour
     
     private NavMeshAgent EnemyAgent => _enemyAgent ??= GetComponent<NavMeshAgent>();
     
-    private AnimationController _enemyAIAnimationController;
+    private AnimationManager _enemyAIAnimationManager;
 
     private readonly int _inputX = Animator.StringToHash("InputX");
     private readonly int _inputY = Animator.StringToHash("InputY");
@@ -34,7 +34,7 @@ public class EnemyController : MonoBehaviour
     {
         _enemyAISensor = GetComponent<AISensor>();
         _animator = GetComponent<Animator>();
-        _enemyAIAnimationController = new AnimationController(_animator);
+        _enemyAIAnimationManager = new AnimationManager(_animator);
         _waypts = wayptParent.GetComponentsInChildren<Transform>(true).ToList();
         _waypts.Remove(wayptParent);
     }
@@ -52,6 +52,7 @@ public class EnemyController : MonoBehaviour
         Vector3 destination = GetDestination();
         Vector3 direction = (destination - transform.position).normalized;
         EnemyAgent.SetDestination(destination);
+        Debug.Log("enemy ai : "+_enemyAgent.speed+" acc- "+_enemyAgent.acceleration+" Vel - "+_enemyAgent.velocity+" stopped "+EnemyAgent.isStopped+ " direction - "+direction);
         //UpdateAnimationParams(direction.x, direction.z);
 
     }
@@ -62,8 +63,6 @@ public class EnemyController : MonoBehaviour
     }*/
     private Vector3 GetDestination()
     {
-
-    
         if(_enemyAISensor.ObjectsInFOV.Count > 0)
         {
             return _destination = _enemyAISensor.ObjectsInFOV[0].transform.position;
