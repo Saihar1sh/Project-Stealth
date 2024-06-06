@@ -18,7 +18,7 @@ public class BaseWeapon : MonoBehaviour
     [SerializeField] private ParticleSystem hitEffectParticle;
     [SerializeField] private TrailRenderer tracerEffect;
     [SerializeField] private Transform raycastOrigin;
-    [SerializeField] private Transform raycastDestination;
+    private Transform raycastDestination;
     
     [SerializeField] private float fireRate = 25f;
     [SerializeField] private float bulletSpeed = 1000f;
@@ -32,7 +32,23 @@ public class BaseWeapon : MonoBehaviour
     
     private List<Bullet> bullets = new List<Bullet>();
     private float maxLifetime = 3.0f;
-
+    
+    public void InitValues(WeaponData weaponData)
+    {
+        fireRate = weaponData.fireRate;
+        bulletSpeed = weaponData.bulletSpeed;
+        bulletDrop = weaponData.bulletDrop;
+        maxLifetime = weaponData.bulletLifeTime;
+        tracerEffect = weaponData.tracerEffect;
+    }
+    public void Init(Transform raycastDestinationTransform, Transform weaponParentTransform)
+    {
+        raycastDestination = raycastDestinationTransform;
+        transform.SetParent(weaponParentTransform);
+        transform.localPosition = Vector3.zero;
+        transform.localRotation = Quaternion.identity;
+    }
+    
     private Vector3 GetPosition(Bullet bullet)
     {
         Vector3 gravity = Vector3.down * bulletDrop;
@@ -88,7 +104,7 @@ public class BaseWeapon : MonoBehaviour
 
     private void DestoryBullets()
     {
-        bullets.RemoveAll(bullet => bullet.time > maxLifetime);
+        bullets.RemoveAll(bullet => bullet.time >= maxLifetime);
     }
 
     private void SimulateBullets(float deltaTime)
@@ -129,4 +145,6 @@ public class BaseWeapon : MonoBehaviour
     {
         isFiring = false;
     }
+
+   
 }

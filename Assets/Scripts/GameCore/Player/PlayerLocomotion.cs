@@ -35,6 +35,10 @@ namespace Gameplay.Player
             _animator.SetFloat(_inputY, inputVector.y);
         }
 
+        private void OnDisable()
+        {
+            PlayerInputManager.Instance.UnSubscribeToMovementInputs(MovementInputsHandling);
+        }
 
         private void OnDestroy()
         {

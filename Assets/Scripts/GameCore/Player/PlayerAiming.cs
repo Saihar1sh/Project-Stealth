@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
+using UnityEngine.Serialization;
 
 
 namespace Gameplay.Player
@@ -12,11 +13,20 @@ namespace Gameplay.Player
         public float turnSpeed = 15f;
         public float aimDuration = .3f;
 
-        [SerializeField] private Rig aimLayer;
 
         private Camera _mainCamera;
 
         [SerializeField] private BaseWeapon currentWeapon;
+        [SerializeField] private Transform crosshairTargetTransform;
+        [SerializeField] private Transform weaponParentTransform;
+        [SerializeField] private Animator rigAnimController;
+
+        private readonly int _holsterBoolHash = Animator.StringToHash("holster_weapon");
+        
+        private void Awake()
+        {
+            
+        }
 
         // Start is called before the first frame update
         void Start()
@@ -25,28 +35,8 @@ namespace Gameplay.Player
             //Cursor.lockState = CursorLockMode.Confined;
         }
 
-        private void FixedUpdate()
+        private void Update()
         {
-            float yawCamera = _mainCamera.transform.rotation.eulerAngles.y;
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, yawCamera, 0),
-                turnSpeed * Time.fixedDeltaTime);
-        }
-
-        private void LateUpdate()
-        {
-            if (aimLayer)
-            {
-                /*if (Input.GetMouseButton(1))
-                {
-                    aimLayer.weight += Time.deltaTime / aimDuration;
-                }
-                else
-                {
-                    aimLayer.weight -= Time.deltaTime / aimDuration;
-                }*/
-                aimLayer.weight = 1f;
-            }
-
             if (currentWeapon)
             {
                 if (Input.GetMouseButtonDown(0))
@@ -64,7 +54,48 @@ namespace Gameplay.Player
                 {
                     currentWeapon.StopFiring();
                 }
+
+                if (Input.GetKeyDown(KeyCode.X))
+                {
+                    ToggleWeaponHolster();
+                }
             }
+         
+        }
+
+        private void ToggleWeaponHolster()
+        {
+            if (rigAnimController)
+            {
+                bool isHolstered = rigAnimController.GetBool(_holsterBoolHash);
+                rigAnimController.SetBool(_holsterBoolHash, !isHolstered);
+            }
+        }
+
+        private void FixedUpdate()
+        {
+            float yawCamera = _mainCamera.transform.rotation.eulerAngles.y;
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, yawCamera, 0),
+                turnSpeed * Time.fixedDeltaTime);
+        }
+        
+        public void EquipWeapon(BaseWeapon weapon, WeaponData weaponData = null)
+        {
+            if (currentWeapon)
+            {
+                Destroy(currentWeapon.gameObject);    
+            }
+            currentWeapon = weapon;
+            if (currentWeapon)
+            {
+                currentWeapon.Init(crosshairTargetTransform, weaponParentTransform);
+            }
+
+            if (weaponData)
+            {
+                rigAnimController.CrossFade(weaponData.GetWeaponAnimationName(),0.1f);
+            }
+           
         }
     }
 }
