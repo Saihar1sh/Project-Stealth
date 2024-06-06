@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474921b7cd52baa4587eed2947ebb0b1, type: 3}
+  m_Name: Rifle_Assualt_Rifle
+  m_EditorClassIdentifier: 
+  weaponType: 3
+  tracerEffect: {fileID: 3465366877677853005, guid: dee38ba3330eb154fbcf5eadce403b5b, type: 3}
+  fireRate: 25
+  bulletSpeed: 1000
+  bulletDrop: 0
+  bulletLifeTime: 3
+  maxRange: 100
+  weaponName: assault_rifle
+  weaponPrefab: {fileID: 2503012978364063016, guid: 4d4fea86b3baa8f47919858d4c6dd7ef, type: 3}
