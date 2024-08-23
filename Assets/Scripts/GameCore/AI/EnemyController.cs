@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Serialization;
 
 public class EnemyController : MonoBehaviour
 {
@@ -19,6 +20,8 @@ public class EnemyController : MonoBehaviour
     private Vector3 _destination;
     
     private Animator _animator;
+
+    private bool isTurning = false;
     
     private NavMeshAgent EnemyAgent => _enemyAgent ??= GetComponent<NavMeshAgent>();
     
@@ -29,6 +32,8 @@ public class EnemyController : MonoBehaviour
     
     private readonly int _movementWalkForward = Animator.StringToHash("Movement_Walk_Fwd");
     private readonly int _isWalkingBool = Animator.StringToHash("isWalking");
+    [FormerlySerializedAs("anglePerFrame")] [SerializeField] private float anglePerSecond = 10f;
+    [SerializeField] private float turnAngleThreshold = 1f;
 
     private void Awake()
     {
@@ -43,19 +48,49 @@ public class EnemyController : MonoBehaviour
     void Start()
     {
         _destIndex = 0;
-        EnemyAgent.SetDestination(GetDestination());
+        Vector3 destination = GetDestination();
+        EnemyAgent.SetDestination(destination);
+        Vector3 direction = (destination - _enemyAgent. transform.position).normalized;
+        direction.y = 0;
+        Quaternion targetRotation = Quaternion.LookRotation(direction);
+        _enemyAgent.transform.rotation = Quaternion.RotateTowards( _enemyAgent.transform.rotation,targetRotation, anglePerSecond * Time.deltaTime);
     }
 
     // Update is called once per frame
     void Update()
     {
-        Vector3 destination = GetDestination();
-        Vector3 direction = (destination - transform.position).normalized;
-        EnemyAgent.SetDestination(destination);
-        Debug.Log("enemy ai : "+_enemyAgent.speed+" acc- "+_enemyAgent.acceleration+" Vel - "+_enemyAgent.velocity+" stopped "+EnemyAgent.isStopped+ " direction - "+direction);
+        Patrol();
         //UpdateAnimationParams(direction.x, direction.z);
-
     }
+
+    private void Patrol()
+    {
+        if (_waypts==null || _waypts.Count == 0 || isTurning)
+            return;
+        StartCoroutine(TurnTowardsDirection());
+        Debug.Log("enemy ai : " + _enemyAgent.speed + " acc- " + _enemyAgent.acceleration + " Vel - " +
+                  _enemyAgent.velocity + " stopped " + EnemyAgent.isStopped);
+    }
+
+    private IEnumerator TurnTowardsDirection()
+    {
+        Vector3 destination = GetDestination();
+        Vector3 direction = (destination - _enemyAgent.transform.position).normalized;
+        direction.y = 0;
+        Quaternion targetRotation = Quaternion.LookRotation(direction);
+        Debug.Log("This target rot: " + targetRotation + " current rot: " + _enemyAgent.transform.rotation);
+        isTurning = true;
+        while(Quaternion.Angle(targetRotation, _enemyAgent.transform.rotation) > turnAngleThreshold)
+        {
+            _enemyAgent.transform.rotation = Quaternion.RotateTowards(_enemyAgent.transform.rotation, targetRotation, anglePerSecond * Time.deltaTime);
+            yield return null;
+        }
+
+        isTurning = false;
+        EnemyAgent.SetDestination(destination);
+        
+    }
+
     /*private void UpdateAnimationParams(float x, float y)
     {
         enemyAIAnimationController.SetFloat(_inputX, x);

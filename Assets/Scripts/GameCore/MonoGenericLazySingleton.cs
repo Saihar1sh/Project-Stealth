@@ -22,7 +22,7 @@ public class MonoGenericLazySingleton<T> : MonoBehaviour where T : MonoBehaviour
 
             if (_instance) return _instance;
             
-            _instance = FindObjectOfType<T>();
+            _instance = FindFirstObjectByType<T>();
                 
             if (!_instance)
             {
