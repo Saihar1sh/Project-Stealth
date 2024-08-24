@@ -4283,6 +4283,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1448023956283853133, guid: c4b95c2e91d6094428d8b0952bc463d8, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: b45451502103ae147b20b86c05ac6092, type: 2}
+    - target: {fileID: 1448023956283853133, guid: c4b95c2e91d6094428d8b0952bc463d8, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4825684830936355639, guid: c4b95c2e91d6094428d8b0952bc463d8, type: 3}
       propertyPath: m_RootOrder
       value: 3
@@ -4301,7 +4309,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4825684830936355639, guid: c4b95c2e91d6094428d8b0952bc463d8, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.903585
       objectReference: {fileID: 0}
     - target: {fileID: 4825684830936355639, guid: c4b95c2e91d6094428d8b0952bc463d8, type: 3}
       propertyPath: m_LocalRotation.x
@@ -4309,7 +4317,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4825684830936355639, guid: c4b95c2e91d6094428d8b0952bc463d8, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0.42840886
       objectReference: {fileID: 0}
     - target: {fileID: 4825684830936355639, guid: c4b95c2e91d6094428d8b0952bc463d8, type: 3}
       propertyPath: m_LocalRotation.z
@@ -4358,6 +4366,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 5310753749814446477, guid: c4b95c2e91d6094428d8b0952bc463d8, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1245421090}
+    - targetCorrespondingSourceObject: {fileID: 5310753749814446477, guid: c4b95c2e91d6094428d8b0952bc463d8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1245421095}
     - targetCorrespondingSourceObject: {fileID: 5310753749814446477, guid: c4b95c2e91d6094428d8b0952bc463d8, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1245421091}
@@ -6764,7 +6775,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1245421087}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 954fc9605d558dc4fa75e3301aecb60c, type: 3}
   m_Name: 
@@ -6817,6 +6828,19 @@ MonoBehaviour:
   occlusionLayers:
     serializedVersion: 2
     m_Bits: 0
+--- !u!114 &1245421095
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1245421087}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d497840a33d47ed47b296eaa6d1e3191, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <wayptParent>k__BackingField: {fileID: 703618366}
 --- !u!4 &1255644716 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4265496315168895388, guid: b7b3aacf72568e947bc011893678bcf2, type: 3}

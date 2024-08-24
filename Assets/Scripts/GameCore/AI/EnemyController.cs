@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Serialization;
@@ -18,22 +19,24 @@ public class EnemyController : MonoBehaviour
     private int _destIndex;
 
     private Vector3 _destination;
-    
+
     private Animator _animator;
 
     private bool isTurning = false;
-    
+
     private NavMeshAgent EnemyAgent => _enemyAgent ??= GetComponent<NavMeshAgent>();
-    
+
     private AnimationManager _enemyAIAnimationManager;
 
     private readonly int _inputX = Animator.StringToHash("InputX");
     private readonly int _inputY = Animator.StringToHash("InputY");
-    
+
     private readonly int _movementWalkForward = Animator.StringToHash("Movement_Walk_Fwd");
     private readonly int _isWalkingBool = Animator.StringToHash("isWalking");
-    [FormerlySerializedAs("anglePerFrame")] [SerializeField] private float anglePerSecond = 10f;
-    [SerializeField] private float turnAngleThreshold = 1f;
+
+    [SerializeField] private float anglePerSecond = 10f;
+
+    [SerializeField] private float turnAngleThreshold = 0.1f;
 
     private void Awake()
     {
@@ -49,11 +52,17 @@ public class EnemyController : MonoBehaviour
     {
         _destIndex = 0;
         Vector3 destination = GetDestination();
-        EnemyAgent.SetDestination(destination);
-        Vector3 direction = (destination - _enemyAgent. transform.position).normalized;
-        direction.y = 0;
+        Vector3 direction = GetEnemyDirection(destination);
         Quaternion targetRotation = Quaternion.LookRotation(direction);
-        _enemyAgent.transform.rotation = Quaternion.RotateTowards( _enemyAgent.transform.rotation,targetRotation, anglePerSecond * Time.deltaTime);
+        _enemyAgent.transform.rotation = Quaternion.RotateTowards(_enemyAgent.transform.rotation, targetRotation, anglePerSecond * Time.deltaTime);
+        EnemyAgent.SetDestination(destination);
+    }
+
+    private Vector3 GetEnemyDirection(Vector3 destination)
+    {
+        Vector3 direction = (destination - _enemyAgent.transform.position).normalized;
+        direction.y = 0;
+        return direction;
     }
 
     // Update is called once per frame
@@ -65,44 +74,58 @@ public class EnemyController : MonoBehaviour
 
     private void Patrol()
     {
-        if (_waypts==null || _waypts.Count == 0 || isTurning)
+        if (_waypts == null || _waypts.Count == 0 || isTurning && !_enemyAgent.hasPath)
+        {
+            UpdateMovementAnimation(false);
             return;
-        StartCoroutine(TurnTowardsDirection());
+        }
+
+        var pos = transform.position.normalized;
+        UpdateMovementAnimation(true);
+        TurnTowardsDirection();
         Debug.Log("enemy ai : " + _enemyAgent.speed + " acc- " + _enemyAgent.acceleration + " Vel - " +
                   _enemyAgent.velocity + " stopped " + EnemyAgent.isStopped);
     }
 
-    private IEnumerator TurnTowardsDirection()
+    private void UpdateMovementAnimation(bool isWalking)
+    {
+        _enemyAIAnimationManager.SetBool(_isWalkingBool, isWalking);
+    }
+
+    private async void TurnTowardsDirection()
     {
         Vector3 destination = GetDestination();
-        Vector3 direction = (destination - _enemyAgent.transform.position).normalized;
-        direction.y = 0;
+        Vector3 direction = GetEnemyDirection(destination);
         Quaternion targetRotation = Quaternion.LookRotation(direction);
         Debug.Log("This target rot: " + targetRotation + " current rot: " + _enemyAgent.transform.rotation);
         isTurning = true;
-        while(Quaternion.Angle(targetRotation, _enemyAgent.transform.rotation) > turnAngleThreshold)
+        while (CheckIfTotallyTurned(targetRotation))
         {
-            _enemyAgent.transform.rotation = Quaternion.RotateTowards(_enemyAgent.transform.rotation, targetRotation, anglePerSecond * Time.deltaTime);
-            yield return null;
+            _enemyAgent.transform.rotation = Quaternion.RotateTowards(_enemyAgent.transform.rotation, targetRotation,
+                anglePerSecond * Time.deltaTime);
+            await Task.Yield();
         }
 
         isTurning = false;
         EnemyAgent.SetDestination(destination);
-        
     }
 
-    /*private void UpdateAnimationParams(float x, float y)
+    private bool CheckIfTotallyTurned(Quaternion targetRotation) => Quaternion.Angle(targetRotation, _enemyAgent.transform.rotation) > turnAngleThreshold;
+
+
+    private void UpdateAnimationParams(float x, float y)
     {
-        enemyAIAnimationController.SetFloat(_inputX, x);
-        enemyAIAnimationController.SetFloat(_inputY, y);
-    }*/
+        _enemyAIAnimationManager.SetFloat(_inputX, x);
+        _enemyAIAnimationManager.SetFloat(_inputY, y);
+    }
+
     private Vector3 GetDestination()
     {
-        if(_enemyAISensor.ObjectsInFOV.Count > 0)
+        if (_enemyAISensor.ObjectsInFOV.Count > 0)
         {
             return _destination = _enemyAISensor.ObjectsInFOV[0].transform.position;
         }
-        
+
         if (EnemyAgent.hasPath)
         {
             return _destination;
@@ -119,12 +142,12 @@ public class EnemyController : MonoBehaviour
             Gizmos.color = Color.green;
             Gizmos.DrawLine(transform.position, _enemyAgent.destination);
         }
-if(_waypts != null && _waypts.Count>0)
-        foreach (var waypt in _waypts)
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawSphere(waypt.position, .25f);
-        }
-        
+
+        if (_waypts != null && _waypts.Count > 0)
+            foreach (var waypt in _waypts)
+            {
+                Gizmos.color = Color.red;
+                Gizmos.DrawSphere(waypt.position, .25f);
+            }
     }
 }
