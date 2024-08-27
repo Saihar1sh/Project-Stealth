@@ -45,6 +45,6 @@ public class AlertState :BaseState<EnemyStateMachine.EnemyStates>
 
     public override void OnDrawGizmos()
     {
-        throw new System.NotImplementedException();
+        
     }
 }

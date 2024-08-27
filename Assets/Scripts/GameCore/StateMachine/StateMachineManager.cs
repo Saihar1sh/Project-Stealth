@@ -58,6 +58,6 @@ public abstract class StateMachineManager<EState> : MonoBehaviour where EState :
 
     private void OnDrawGizmos()
     {
-        CurrentState.OnDrawGizmos();
+        CurrentState?.OnDrawGizmos();
     }
 }

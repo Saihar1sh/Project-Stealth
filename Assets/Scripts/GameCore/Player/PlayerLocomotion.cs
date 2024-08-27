@@ -12,6 +12,7 @@ namespace Gameplay.Player
 
         private readonly int _inputX = Animator.StringToHash("InputX");
         private readonly int _inputY = Animator.StringToHash("InputY");
+        private readonly int _isSprinting = Animator.StringToHash("IsSprinting");
 
         private void Awake()
         {
@@ -22,17 +23,27 @@ namespace Gameplay.Player
         void Start()
         {
             PlayerInputManager.Instance.SubscribeToMovementInputs(MovementInputsHandling);
+            PlayerInputManager.Instance.SubscribeToSprintInput(SprintInputsHandling);
+            
         }
 
         private void MovementInputsHandling(Vector2 inputs)
         {
-            UpdateAnimationParams(inputs);
+            UpdateMovementAnimationParams(inputs);
+        }
+        private void SprintInputsHandling(bool _sprinting)
+        {
+            UpdateSprintAnimationParams(_sprinting);
         }
 
-        private void UpdateAnimationParams(Vector2 inputVector)
+        private void UpdateMovementAnimationParams(Vector2 inputVector)
         {
             _animator.SetFloat(_inputX, inputVector.x);
             _animator.SetFloat(_inputY, inputVector.y);
+        }
+        private void UpdateSprintAnimationParams(bool isSprinting)
+        {
+            _animator.SetBool(_isSprinting,isSprinting);
         }
 
         private void OnDisable()

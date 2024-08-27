@@ -5,18 +5,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4b6b40c1-2667-41c1-aa8f-de8f44c553d4" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/GameCore/StateMachine.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/GameCore/StateMachine/BaseState.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/GameCore/StateMachine/BaseState.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/GameCore/StateMachine/StateMachineManager.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/GameCore/StateMachine/StateMachineManager.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scenes/GamePrototyping.unity" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scenes/GamePrototyping.unity.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Project-Stealth/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Project-Stealth/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Animations/EnemyAIAnimationController.controller" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Animations/EnemyAIAnimationController.controller" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Downloaded Assets/Male Animations/Animations/Strafe/Turning/RapidTurnLeft/m@StrafeRapidTurningLeft.fbx.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Downloaded Assets/Male Animations/Animations/Strafe/Turning/RapidTurnLeft/m@StrafeRapidTurningLeft.fbx.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Animations/ThirdPersonShooter.controller" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Animations/ThirdPersonShooter.controller" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Materials/EmissiveLBlue.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Materials/EmissiveLBlue.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/GameCore/AI/EnemyController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/GameCore/AI/EnemyController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/EditorSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/EditorSettings.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/GameCore/Player/PlayerControls.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/GameCore/Player/PlayerControls.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/GameCore/Player/PlayerControls.inputactions" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/GameCore/Player/PlayerControls.inputactions" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/GameCore/Player/PlayerInputManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/GameCore/Player/PlayerInputManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/GameCore/Player/PlayerLocomotion.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/GameCore/Player/PlayerLocomotion.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/GameCore/StateMachine/Enemy/AlertState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/GameCore/StateMachine/Enemy/AlertState.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/GameCore/StateMachine/Enemy/AttackState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/GameCore/StateMachine/Enemy/AttackState.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/GameCore/StateMachine/Enemy/DeathState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/GameCore/StateMachine/Enemy/DeathState.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/GameCore/StateMachine/StateMachineManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/GameCore/StateMachine/StateMachineManager.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -102,10 +105,10 @@
       </option>
       <method v="2" />
     </configuration>
-    <configuration name="Attach to Unity Editor" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost" ignored-value-for-modified-check="17768">
+    <configuration name="Attach to Unity Editor" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost">
       <option name="allowRunningInParallel" value="false" />
       <option name="listenPortForConnections" value="false" />
-      <option name="pid" value="17768" />
+      <option name="pid" />
       <option name="projectPathOnTarget" />
       <option name="selectedOptions">
         <list />
@@ -147,7 +150,8 @@
       <workItem from="1724426447384" duration="6272000" />
       <workItem from="1724481057113" duration="3633000" />
       <workItem from="1724495535779" duration="6028000" />
-      <workItem from="1724504661977" duration="7153000" />
+      <workItem from="1724504661977" duration="7527000" />
+      <workItem from="1724770108674" duration="2821000" />
     </task>
     <servers />
   </component>
