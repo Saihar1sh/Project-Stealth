@@ -96,13 +96,13 @@ public class BaseWeapon : MonoBehaviour
 
     }
 
-    public void UpdateBulletsSimilation(float deltaTime)
+    public void UpdateBulletsSimulation(float deltaTime)
     {
         SimulateBullets(deltaTime);
-        DestoryBullets();
+        DestroyBullets();
     }
 
-    private void DestoryBullets()
+    private void DestroyBullets()
     {
         bullets.RemoveAll(bullet => bullet.time >= maxLifetime);
     }

@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 474921b7cd52baa4587eed2947ebb0b1, type: 3}
-  m_Name: Rifle_Assualt_Rifle
+  m_Name: Rifle_AssualtRifle
   m_EditorClassIdentifier: 
   weaponType: 3
   tracerEffect: {fileID: 3465366877677853005, guid: dee38ba3330eb154fbcf5eadce403b5b, type: 3}

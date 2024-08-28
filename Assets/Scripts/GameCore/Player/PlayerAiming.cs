@@ -49,7 +49,7 @@ namespace Gameplay.Player
                     currentWeapon.UpdateFiring(Time.deltaTime);
                 }
 
-                currentWeapon.UpdateBulletsSimilation(Time.deltaTime);
+                currentWeapon.UpdateBulletsSimulation(Time.deltaTime);
                 if (Input.GetMouseButtonUp(0))
                 {
                     currentWeapon.StopFiring();

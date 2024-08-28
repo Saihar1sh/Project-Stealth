@@ -30,8 +30,8 @@ public enum WeaponType
 {
     None,
     Melee,
-    HandGuns,
+    HandGun,
     Rifle,
-    Shotguns
+    Shotgun
     
 }
