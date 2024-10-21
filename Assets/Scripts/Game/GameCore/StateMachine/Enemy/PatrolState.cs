@@ -1,6 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ShGames.Utils;
+using ShGames.Utils.PathFinding;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -31,6 +34,8 @@ public class PatrolState : BaseState<EnemyStateMachine.EnemyStates>
     private const float anglePerSecond = 60f;
 
     private const float turnAngleThreshold = 0.1f;
+    
+    public LineRenderer lineRenderer;
 
     #region State abstract functions
 
@@ -43,7 +48,7 @@ public class PatrolState : BaseState<EnemyStateMachine.EnemyStates>
     {
         _destIndex = 0;
         Vector3 destination = GetDestination();
-        Vector3 direction = GetEnemyDirection(destination);
+        Vector3 direction = GetDestinationDirection(destination);
         Quaternion targetRotation = Quaternion.LookRotation(direction);
         _enemyAgent.transform.rotation = Quaternion.RotateTowards(_enemyAgent.transform.rotation, targetRotation,
             anglePerSecond * Time.deltaTime);
@@ -81,6 +86,7 @@ public class PatrolState : BaseState<EnemyStateMachine.EnemyStates>
     private void StateSetup(EnemyStateMachine stateMachine)
     {
         _enemyStateMachine = stateMachine;
+        lineRenderer = stateMachine.gameObject.AddComponent<LineRenderer>();
         var wayptParent = stateMachine.wayptParent;
         _enemyAgent = _enemyStateMachine.EnemyAgent;
         _enemyAISensor = _enemyStateMachine.EnemyAISensor;
@@ -99,16 +105,16 @@ public class PatrolState : BaseState<EnemyStateMachine.EnemyStates>
 
         UpdateMovementAnimation(true);
         TurnTowardsDirection();
-        Logger.Debug("enemy ai : " + _enemyAgent.speed + " acc- " + _enemyAgent.acceleration + " Vel - " +
+        GameLogger.Debug("enemy ai : " + _enemyAgent.speed + " acc- " + _enemyAgent.acceleration + " Vel - " +
                   _enemyAgent.velocity + " stopped " + _enemyAgent.isStopped);
     }
 
     private async void TurnTowardsDirection()
     {
         Vector3 destination = GetDestination();
-        Vector3 direction = GetEnemyDirection(destination);
+        Vector3 direction = GetDestinationDirection(destination);
         Quaternion targetRotation = Quaternion.LookRotation(direction);
-        Logger.Debug("This target rot: " + targetRotation + " current rot: " + _enemyAgent.transform.rotation);
+        GameLogger.Debug("This target rot: " + targetRotation + " current rot: " + _enemyAgent.transform.rotation);
         isTurning = true;
         while (CheckIfTotallyTurned(targetRotation))
         {
@@ -116,7 +122,12 @@ public class PatrolState : BaseState<EnemyStateMachine.EnemyStates>
                 anglePerSecond * Time.deltaTime);
             await Task.Yield();
         }
+        Vector3[] corners = _enemyAgent.path.corners;
+        var smoothedPath = PathfindingUtils.SmoothPath(corners, 10);
 
+        // For visualization
+        lineRenderer.positionCount = smoothedPath.Count;
+        lineRenderer.SetPositions(smoothedPath.ToArray());
         isTurning = false;
         _enemyAgent.SetDestination(destination);
     }
@@ -131,7 +142,7 @@ public class PatrolState : BaseState<EnemyStateMachine.EnemyStates>
     private bool CheckIfTotallyTurned(Quaternion targetRotation) =>
         Quaternion.Angle(targetRotation, _enemyAgent.transform.rotation) > turnAngleThreshold;
 
-    private Vector3 GetEnemyDirection(Vector3 destination)
+    private Vector3 GetDestinationDirection(Vector3 destination)
     {
         Vector3 direction = (destination - _enemyAgent.transform.position).normalized;
         direction.y = 0;
@@ -163,6 +174,8 @@ public class PatrolState : BaseState<EnemyStateMachine.EnemyStates>
 //For Unity Editor
     public override void OnDrawGizmos()
     {
+        //if(!EditorApplication.isPlaying) return;
+        
         if (_enemyAgent.hasPath)
         {
             Gizmos.color = Color.green;

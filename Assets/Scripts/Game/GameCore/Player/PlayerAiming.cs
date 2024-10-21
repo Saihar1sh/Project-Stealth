@@ -6,7 +6,7 @@ using UnityEngine.Animations.Rigging;
 using UnityEngine.Serialization;
 
 
-namespace Gameplay.Player
+namespace ShGames.Gameplay.Player
 {
     public class PlayerAiming : MonoBehaviour
     {

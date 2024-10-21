@@ -1,4 +1,4 @@
-using Gameplay.Inputs;
+using ShGames.Gameplay.Inputs;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;

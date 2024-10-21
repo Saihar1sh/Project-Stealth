@@ -1,4 +1,5 @@
 using System;
+using UnityEditor;
 using UnityEngine;
 
 public class KatanaAnimations : MonoBehaviour
@@ -19,18 +20,34 @@ public class KatanaAnimations : MonoBehaviour
         index = 0;
     }
 
-    private void Update()
+
+    [ContextMenu("PlayNextAnimation")]
+    public void PlayNextAnimation()
     {
-        if (CurrentAnimationClip != null &&
-            !playerAnimController.GetCurrentAnimatorStateInfo(0).IsName(CurrentAnimationClip.name))
+        if(!isActiveAndEnabled || !EditorApplication.isPlaying) return;
+        var d = ++index;
+        index = d % animationsList.Length;
+        
+        PlayAnimation();
+    }
+
+    private void PlayAnimation()
+    {
+        CurrentAnimationClip = animationsList[index];
+        
+        if (CurrentAnimationClip != null )
         {
             playerAnimController.Play(CurrentAnimationClip.name);
         }
     }
 
-    [ContextMenu("PlayNextAnimation")]
-    public void PlayNextAnimation() => CurrentAnimationClip = animationsList[++index % animationsList.Length];
-
     [ContextMenu("PlayPreviousAnimation")]
-    public void PlayPreviousAnimation() => CurrentAnimationClip = animationsList[--index % animationsList.Length];
+    public void PlayPreviousAnimation()
+    {
+        if(!isActiveAndEnabled || !EditorApplication.isPlaying) return;
+        var d = --index;
+        index = d % animationsList.Length;
+
+        PlayAnimation();
+    }
 }

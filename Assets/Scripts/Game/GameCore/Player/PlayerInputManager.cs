@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace Gameplay.Inputs
+namespace ShGames.Gameplay.Inputs
 {
     public class PlayerInputManager : MonoGenericLazySingleton<PlayerInputManager>
     {

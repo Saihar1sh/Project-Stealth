@@ -1,5 +1,5 @@
 using System;
-using Gameplay.Player;
+using ShGames.Gameplay.Player;
 using UnityEngine;
 
 public class WeaponPickup : MonoBehaviour

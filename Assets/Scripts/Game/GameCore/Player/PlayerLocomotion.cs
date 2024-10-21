@@ -1,10 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Gameplay.Inputs;
+using ShGames.Gameplay.Inputs;
 using UnityEngine;
 
-namespace Gameplay.Player
+namespace ShGames.Gameplay.Player
 {
     public class PlayerLocomotion : MonoBehaviour
     {
