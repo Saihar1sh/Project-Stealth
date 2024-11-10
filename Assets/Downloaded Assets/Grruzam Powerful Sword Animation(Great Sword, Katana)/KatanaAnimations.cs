@@ -41,7 +41,7 @@ public class KatanaAnimations : MonoBehaviour
         }
     }
 
-    [ContextMenu("PlayPreviousAnimation")]
+    [ContextMenu(nameof(PlayPreviousAnimation))]
     public void PlayPreviousAnimation()
     {
         if(!isActiveAndEnabled || !EditorApplication.isPlaying) return;
